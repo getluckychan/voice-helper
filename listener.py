@@ -9,8 +9,6 @@ class Command(ABC):
 
 
 class OpenCommand(Command):
-    open = 'open'
-
     class SysCommand(Enum):
         chrome = "google-chrome"
         telegram = "telegram-desktop"
@@ -26,11 +24,13 @@ class OpenCommand(Command):
 
 
 class SoundCommand(Command):
-    sound = "sound"
-
     class SysCommand(Enum):
-        mute = "amixer -c 0 set Mic mute"
-        unmute = "amixer -c 0 set Mic unmute"
+        mute = "amixer set Master mute"
+        unmute = "amixer set Master unmute\n" \
+                 "amixer set Headphone unmute\n" \
+                 "amixer set Speaker unmute"
+        increase = "amixer -D pulse sset Master 20%+"
+        decrease = "amixer -D pulse sset Master 20%-"
 
     def check(self, text):
         text = text.lower()
