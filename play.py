@@ -1,12 +1,17 @@
 import speech_recognition as sr
 from listener import *
+from threading import Thread
+from os import system
 
 
 def working(cmd):
     if "open" in cmd:
         command = OpenCommand()
         command.check(cmd)
-    elif "volume" or "sound" in cmd:
+    elif "shutdown" or "reboot" in cmd:
+        command = SystemCommand()
+        command.check(cmd)
+    if "volume" or "sound" in cmd:
         command = SoundCommand()
         command.check(cmd)
 
@@ -36,7 +41,7 @@ class VoiceInput:
 
         print('Нажмите Enter для завершения')
         print('Говорите...')
-        r.listen_in_background(sr.Microphone(), self.on_listen, phrase_time_limit=4)
+        r.listen_in_background(sr.Microphone(), self.on_listen, phrase_time_limit=6)
         input()
 
 

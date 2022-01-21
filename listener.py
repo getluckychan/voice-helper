@@ -1,5 +1,6 @@
 from enum import Enum
 from abc import ABC, abstractmethod
+from os import system
 
 
 class Command(ABC):
@@ -18,7 +19,6 @@ class OpenCommand(Command):
         text = text.lower()
         for command in self.SysCommand:
             if command.name in text:
-                from os import system
                 print("opening: " + command.name)
                 system(command.value)
 
@@ -36,7 +36,6 @@ class SoundCommand(Command):
         text = text.lower()
         for command in self.SysCommand:
             if command.name in text:
-                from os import system
                 print("working: " + command.name)
                 system(command.value)
 
@@ -50,6 +49,11 @@ class SystemCommand(Command):
         text = text.lower()
         for command in self.SysCommand:
             if command.name in text:
-                from os import system
-                print("working: " + command.name)
-                system(command.value)
+                print("Do u really want to do it?\n"
+                      "press enter if yes")
+                if input() == "\n":
+                    print("working: " + command.name)
+                    system(command.value)
+                else:
+                    print("dont say what you dont want")
+                    return ""
