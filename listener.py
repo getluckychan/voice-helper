@@ -25,10 +25,10 @@ class OpenCommand(Command):
 
 class SoundCommand(Command):
     class SysCommand(Enum):
-        mute = "amixer set Master mute"
-        unmute = "amixer set Master unmute\n" \
-                 "amixer set Headphone unmute\n" \
-                 "amixer set Speaker unmute"
+        off = "amixer set Master mute"
+        on = "amixer set Master unmute\n" \
+             "amixer set Headphone unmute\n" \
+             "amixer set Speaker unmute"
         increase = "amixer -D pulse sset Master 20%+"
         decrease = "amixer -D pulse sset Master 20%-"
 

@@ -2,72 +2,44 @@ import speech_recognition as sr
 from listener import *
 
 
-# def on_listen(recognizer, audio):
-#     # print('on_listen')
-#     try:
-#         voice = recognizer.recognize_google(audio, language='en-US').lower()
-#     except sr.UnknownValueError as e:
-#         pass
-#     else:
-#         return voice
-#
-#
-# def working():
-#     if "open" in voice:
-#         command = OpenCommand()
-#         command.check(voice)
-#     elif "volume" or "sound" in voice:
-#         command = SoundCommand()
-#         command.check(voice)
-#
-#
-# r = sr.Recognizer()
-# with sr.Microphone() as source:
-#     r.pause_threshold = 1
-#     print('Тихо...')
-#     r.adjust_for_ambient_noise(source, duration=1)
-#
-# print('Нажмите Enter для завершения')
-# print('Говорите...')
-# r.listen_in_background(sr.Microphone(), on_listen, phrase_time_limit=4)
-# input()
+def working(cmd):
+    if "open" in cmd:
+        command = OpenCommand()
+        command.check(cmd)
+    elif "volume" or "sound" in cmd:
+        command = SoundCommand()
+        command.check(cmd)
 
 
 class VoiceInput:
-    def __init__(self, r):
-        self.r = r
+    def __init__(self):
         self.voice = None
 
     def on_listen(self, recognizer, audio):
-        # print('on_listen')
         try:
             voice = recognizer.recognize_google(audio, language='en-US').lower()
-        except sr.UnknownValueError as e:
-            pass
+        except sr.UnknownValueError:
+            print("Google Speech Recognition could not understand audio")
+        except sr.RequestError as e:
+            print("Could not request results from Google Speech Recognition service; {0}".format(e))
         else:
             print(voice)
             self.voice = voice
-            return self.voice
+            working(self.voice)
 
     def listening(self):
-        # with sr.Microphone() as source:
-        #     r.pause_threshold = 1
-        #     print('Тихо...')
-        #     r.adjust_for_ambient_noise(source, duration=1)
+        r = sr.Recognizer()
+        with sr.Microphone() as source:
+            r.pause_threshold = 1
+            print('Тихо...')
+            r.adjust_for_ambient_noise(source, duration=1)
+
         print('Нажмите Enter для завершения')
         print('Говорите...')
-        self.r.listen_in_background(sr.Microphone(), source=sr.AudioSource, callback=self.on_listen, phrase_time_limit=4)
+        r.listen_in_background(sr.Microphone(), self.on_listen, phrase_time_limit=4)
         input()
 
-    def working(self):
-        if "open" in self.voice:
-            command = OpenCommand()
-            command.check(self.voice)
-        elif "volume" or "sound" in self.voice:
-            command = SoundCommand()
-            command.check(self.voice)
 
-
-work = VoiceInput(sr.Recognizer)
-work.listening()
-work.working()
+if __name__ == "__main__":
+    work = VoiceInput()
+    work.listening()
