@@ -39,3 +39,17 @@ class SoundCommand(Command):
                 from os import system
                 print("working: " + command.name)
                 system(command.value)
+
+
+class SystemCommand(Command):
+    class SysCommand(Enum):
+        shutdown = "poweroff"
+        reboot = "reboot"
+
+    def check(self, text):
+        text = text.lower()
+        for command in self.SysCommand:
+            if command.name in text:
+                from os import system
+                print("working: " + command.name)
+                system(command.value)
