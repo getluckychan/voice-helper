@@ -5,15 +5,12 @@ from os import system
 
 
 def working(cmd):
-    if "open" in cmd:
-        command = OpenCommand()
-        command.check(cmd)
-    elif "shutdown" or "reboot" in cmd:
-        command = SystemCommand()
-        command.check(cmd)
-    if "volume" or "sound" in cmd:
-        command = SoundCommand()
-        command.check(cmd)
+    checking = {
+        "open": OpenCommand().check(cmd),
+        "shutdown" or "reboot": SystemCommand().check(cmd),
+        "volume" or "sound": SoundCommand().check(cmd)
+    }
+    checking.get(cmd)
 
 
 class VoiceInput:
