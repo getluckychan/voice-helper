@@ -1,6 +1,9 @@
 from enum import Enum
 from abc import ABC, abstractmethod
 from os import system
+from time import sleep
+
+command_need_to_confirm = []
 
 
 class Command(ABC):
@@ -49,19 +52,5 @@ class SystemCommand(Command):
         text = text.lower()
         for command in self.SysCommand:
             if command.name in text:
-                print("Do u really want to do it?\n"
-                      "press enter if yes")
-                if input() == "\n":
-                    print("working: " + command.name)
-                    system(command.value)
-                else:
-                    print("dont say what you dont want")
-                    return ""
-
-    def check_bool(self, text):
-        print("that works")
-        confirm = {
-            "yes": True,
-            "no": False
-        }
-        return confirm.get(text)
+                command_need_to_confirm.append(command.value)
+                pass
