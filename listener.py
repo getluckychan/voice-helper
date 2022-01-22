@@ -57,3 +57,11 @@ class SystemCommand(Command):
                 else:
                     print("dont say what you dont want")
                     return ""
+
+    def check_bool(self, text):
+        print("that works")
+        confirm = {
+            "yes": True,
+            "no": False
+        }
+        return confirm.get(text)

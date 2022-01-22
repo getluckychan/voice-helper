@@ -10,7 +10,11 @@ def working(cmd):
         "shutdown" or "reboot": SystemCommand().check(cmd),
         "volume" or "sound": SoundCommand().check(cmd)
     }
-    checking.get(cmd)
+    return checking.get(cmd)
+
+
+def confirm(cmd):
+    return SystemCommand().check_bool(cmd)
 
 
 class VoiceInput:
@@ -27,7 +31,10 @@ class VoiceInput:
         else:
             print(voice)
             self.voice = voice
-            working(self.voice)
+            func = working(self.voice)
+            func1 = confirm(self.voice)
+            Thread(target=func).start()
+            Thread(target=func1).start()
 
     def listening(self):
         r = sr.Recognizer()
@@ -43,5 +50,4 @@ class VoiceInput:
 
 
 if __name__ == "__main__":
-    work = VoiceInput()
-    work.listening()
+    VoiceInput().listening()
