@@ -5,19 +5,6 @@ from threading import Thread
 
 # from telegram import *
 
-def check_bool(cmd):
-    try:
-        SystemCommand().check(cmd)
-        checking = {
-            "yes": command_need_to_confirm[0],
-            "no": "dont say what you dont want"
-        }
-        print("are u sure")
-        print(checking.get(cmd))
-        system(checking.get(cmd))
-    except IndexError:
-        pass
-
 
 class VoiceInput:
     def __init__(self):
@@ -34,16 +21,17 @@ class VoiceInput:
             print(voice)
             self.voice = voice
 
-            t2 = Thread(target=check_bool(self.voice))
-            t2.start()
+            confirming_thread = Thread(target=check_bool(self.voice))
+            confirming_thread.start()
+            opening_thread = Thread(target=OpenCommand().check(self.voice))
+            opening_thread.start()
 
             def working(cmd):
                 checking = {
-                    "open": OpenCommand().check(cmd),
+                    "open": opening_thread.join(),
                     "volume" or "sound": SoundCommand().check(cmd),
-                    "shutdown" or "reboot": t2.join(5)
+                    "shutdown" or "shut down" or "reboot": confirming_thread.join(5)
                 }
-                return checking.get(cmd)
 
             t1 = Thread(target=working(self.voice))
             t1.start()
