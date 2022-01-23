@@ -14,7 +14,7 @@ class VoiceInput:
         try:
             voice = recognizer.recognize_google(audio, language='en-US').lower()
         except sr.UnknownValueError:
-            print("Google Speech Recognition could not understand audio")
+            pass
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
         else:
@@ -28,23 +28,21 @@ class VoiceInput:
 
             def working(cmd):
                 checking = {
-                    "open": opening_thread.join(),
+                    "open": opening_thread.join(5),
                     "volume" or "sound": SoundCommand().check(cmd),
                     "shutdown" or "shut down" or "reboot": confirming_thread.join(5)
                 }
 
             t1 = Thread(target=working(self.voice))
-            t1.start()
+            t1.run()
 
     def listening(self):
         r = sr.Recognizer()
         with sr.Microphone() as source:
             r.pause_threshold = 1
-            print('Тихо...')
             r.adjust_for_ambient_noise(source, duration=1)
 
-        print('Нажмите Enter для завершения')
-        print('Говорите...')
+        print('press Enter for closing')
         r.listen_in_background(sr.Microphone(), self.on_listen, phrase_time_limit=6)
         input()
 

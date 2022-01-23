@@ -1,8 +1,7 @@
 from enum import Enum
 from abc import ABC, abstractmethod
 from os import system
-from time import sleep
-from threading import Thread
+
 
 command_need_to_confirm = []
 
@@ -50,9 +49,10 @@ class SystemCommand(Command):
         reboot = "reboot"
 
     def check(self, text):
-        text = text.lower()
+        com = text.split()
+        com = ''.join(com)
         for command in self.SysCommand:
-            if command.name in text:
+            if command.name in com:
                 command_need_to_confirm.append(command.value)
                 pass
 
@@ -61,7 +61,7 @@ def check_bool(cmd):
     try:
         SystemCommand().check(cmd)
         checking = {
-            "yes": command_need_to_confirm[0],
+            "yes": f'{command_need_to_confirm[0]}',
             "no": "dont say what you dont want"
         }
         print("are u sure")
